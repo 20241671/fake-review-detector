@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>허위 리뷰 탐지기</title>
+
+  <style>
+
+    body {
+
+      background-color: #f4f4f4;
+      font-family: Arial;
+      padding: 40px;
+
+    }
+
+    .container {
+
+      background-color: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 15px;
+
+    }
+
+    h1 {
+
+      text-align: center;
+
+    }
+
+    textarea {
+
+      width: 100%;
+      height: 180px;
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 16px;
+
+    }
+
+    button {
+
+      margin-top: 20px;
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      cursor: pointer;
+
+    }
+
+    #result {
+
+      margin-top: 25px;
+      padding: 20px;
+      background-color: #eeeeee;
+      border-radius: 10px;
+      line-height: 1.8;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>허위 리뷰 탐지기</h1>
+
+    <textarea
+      id="review"
+      placeholder="리뷰를 입력하세요"></textarea>
+
+    <button onclick="checkReview()">
+
+      분석하기
+
+    </button>
+
+    <div id="result">
+
+      결과가 여기에 표시됩니다.
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function checkReview() {
+
+      let text =
+      document.getElementById("review").value;
+
+      let score = 0;
+
+      let reasons = [];
+
+      // 허위 리뷰 단어 데이터
+      let fakewords = [
+        "무조건",
+        "꼭 사세요",
+        "완벽",
+        "최고",
+      ]
+
+
+
+      // 강한 설득 표현 검사
+      if(
+
+      text.includes("꼭 사세요") ||
+      text.includes("무조건") ||
+      text.includes("강추") ||
+      text.includes("인생템") ||
+      text.includes("최고")
+
+      ) {
+
+        score++;
+
+        reasons.push("강한 설득 표현 사용");
+
+      }
+
+
+
+      // 경험 표현 부족 검사
+      if(
+
+      !text.includes("사용") &&
+      !text.includes("배송") &&
+      !text.includes("구매") &&
+      !text.includes("직접") &&
+      !text.includes("써봤")
+
+      ) {
+
+        score++;
+
+        reasons.push("구체적인 경험 표현 부족");
+
+      }
+
+
+
+      // 느낌표 검사
+      if(
+
+      text.includes("!!!")
+
+      ) {
+
+        score++;
+
+        reasons.push("과도한 느낌표 사용");
+
+      }
+
+
+
+      // 지나치게 긴 리뷰 검사
+      if(
+
+      text.length > 100
+
+      ) {
+
+        score++;
+
+        reasons.push("리뷰 길이가 지나치게 김");
+
+      }
+
+
+
+      // 결과 출력
+      let result = "";
+
+
+
+      if(score >= 3) {
+
+        result =
+        "⚠️ 허위 리뷰 가능성이 높습니다";
+
+      }
+
+      else if(score >= 1) {
+
+        result =
+        "🟡 조작 가능성이 일부 존재합니다";
+
+      }
+
+      else {
+
+        result =
+        "✅ 일반 리뷰일 가능성이 높습니다";
+
+      }
+
+
+
+      document.getElementById("result").innerHTML =
+
+      result +
+
+      "<br><br><b>탐지된 특징</b><br>" +
+
+      reasons.join("<br>");
+
+    }
+
+  </script>
+
+</body>
+
+</html>
